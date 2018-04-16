@@ -30,7 +30,7 @@ $flake->render();
 在下面的例子代码中，视图将可以使用 `$total`，`$fruits` 来取得数据，其值分别为 `100`，`array('apple', 'banana')`。
 
 ```php
-$flake = new Flake('index.php', 'resources/views', [
+$flake = new Flake('index', 'resources/views', [
     'total' => 100,
     'fruits' => ['apple', 'banana'],
 ]);
@@ -117,7 +117,7 @@ $flake->render();
 
 ```html
 <!-- 视图被保存在 resources/views/index.php -->
-<?php $this->extend('main.php'); // 视图继承 ?>
+<?php $this->extend('layout/main'); // 视图继承 ?>
 
 <!-- 这区域是视图的内容 -->
 Hello, <?php echo $name; ?>
@@ -164,9 +164,9 @@ $this->end();
 ```html
 <html>
 ...
-    <?php $this->nest('header.php'); ?>
+    <?php $this->nest('header'); ?>
     ...
-    <?php $this->nest('footer.php'); ?>
+    <?php $this->nest('footer'); ?>
 ...
 </html>
 ```
