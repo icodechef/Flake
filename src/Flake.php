@@ -102,7 +102,7 @@ class Flake
      * @param  callable|null  $callback
      * @return string
      */
-    public function render(callable $callback = null)
+    public function render($callback = null)
     {
         try {
             $contents = $this->renderContents();
@@ -285,7 +285,7 @@ class Flake
     public function setPath($path)
     {
         if (! is_dir($path)) {
-            throw new \Exception(sprintf('The "%s" directory does not exist.', $path));
+            throw new \InvalidArgumentException(sprintf('The "%s" directory does not exist.', $path));
         }
 
         $this->path = rtrim($path, '/\\');
@@ -352,7 +352,7 @@ class Flake
             return $viewPath;
         }
 
-        throw new \Exception("View [{$name}] not found.");
+        throw new \InvalidArgumentException("View [{$name}] not found.");
     }
 
     /**
@@ -406,7 +406,7 @@ class Flake
     protected function def($name, $content = '')
     {
         if ($name === 'content') {
-            throw new \Exception('The section name "content" is reserved.');
+            throw new \InvalidArgumentException('The section name "content" is reserved.');
         }
 
         $this->sections[$name] = $content;
@@ -424,7 +424,7 @@ class Flake
     protected function end()
     {
         if (empty($this->sections)) {
-            throw new \Exception('You must start a section before you can stop it.');
+            throw new \LogicException('You must start a section before you can stop it.');
         }
 
         end($this->sections);
