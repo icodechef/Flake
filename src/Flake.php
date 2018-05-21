@@ -88,7 +88,7 @@ class Flake
      *
      * @param  string  $view
      * @param  array   $data
-     * @return void
+     * @return Flake
      */
     public function make($view, $mergeData = [])
     {
@@ -409,19 +409,55 @@ class Flake
             throw new \InvalidArgumentException('The section name "content" is reserved.');
         }
 
-        $this->sections[$name] = $content;
-
         if (! $content) {
+            if (isset($this->sections[$name])) {
+                $content = $this->sections[$name];
+                unset($this->sections[$name]);
+            }
+
             ob_start();
         }
+
+        $this->sections[$name] = $content;
     }
 
     /**
      * 结束定义一个视图片段
      *
+     * @param  string  $action
      * @return void
      */
-    protected function end()
+    protected function end($action = 'append')
+    {
+        if ($action == 'append') {
+            $this->append();
+        } else {
+            $this->override();
+        }
+    }
+
+    /**
+     * 附加视图片段
+     *
+     * @return void
+     */
+    protected function append()
+    {
+        if (empty($this->sections)) {
+            throw new \LogicException('You must start a section before you can stop it.');
+        }
+
+        end($this->sections);
+
+        $this->sections[key($this->sections)] .= ob_get_clean();
+    }
+
+    /**
+     * 覆盖视图片段
+     *
+     * @return void
+     */
+    protected function override()
     {
         if (empty($this->sections)) {
             throw new \LogicException('You must start a section before you can stop it.');
